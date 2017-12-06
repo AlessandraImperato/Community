@@ -9,5 +9,7 @@ public class PostActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+        //ricevo l'intent da groupactivity e per quel gruppo mi prendo tutti i post e in una recycler view metto tutti i post relativi
+        //con autore titolo e data
     }
 }

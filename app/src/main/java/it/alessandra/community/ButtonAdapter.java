@@ -42,10 +42,12 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ViewHolder
     public void onBindViewHolder(final ButtonAdapter.ViewHolder holder, int position) {
         Gruppo tmp = gruppi.get(position);
         holder.button.setText(tmp.getNome());
+        final String nomeGruppo = tmp.getNome();
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(context,PostActivity.class);
+                i.putExtra("GRUPPO",nomeGruppo); //da passare alla PostActivity
                 (v.getContext()).startActivity(i);
             }
         });
