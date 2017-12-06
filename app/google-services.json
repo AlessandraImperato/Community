@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "111824018707",
+    "firebase_url": "https://dbcommunity-cf2e7.firebaseio.com",
+    "project_id": "dbcommunity-cf2e7",
+    "storage_bucket": "dbcommunity-cf2e7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:111824018707:android:5646401e1530a52e",
+        "android_client_info": {
+          "package_name": "it.alessandra.community"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "111824018707-n6nu99lfke5cpt7n4cncsl3i5t1g4e7u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.alessandra.community",
+            "certificate_hash": "1605a4b549d411246b1c44590043f8c02bc3fdbd"
+          }
+        },
+        {
+          "client_id": "111824018707-t1vaau5sp0nv2mljp87t2kok5u95djei.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPVfCf87BPMjIOj7nXxe20_E7Pb9aFdmI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "111824018707-t1vaau5sp0nv2mljp87t2kok5u95djei.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
