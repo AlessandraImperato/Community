@@ -34,9 +34,7 @@ public class MainActivity extends AppCompatActivity {
         if(control.equals("noLog")){
             Intent i = new Intent(getApplicationContext(),LoginActivity.class);
             startActivity(i);
-        }
-
-        else if (control.equals("loginOk")){
+        }else{
             Intent i = new Intent(getApplicationContext(),GroupActivity.class);
             startActivity(i);
         }

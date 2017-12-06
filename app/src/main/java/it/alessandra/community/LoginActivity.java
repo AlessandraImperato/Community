@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity implements TaskDelegate{
                     if(text.equals(password)){
                         preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                         SharedPreferences.Editor editor = preferences.edit();
-                        editor.putString("USERNAME", "loginOk");
+                        editor.putString("USERNAME", username);
                         editor.commit();
                         delegate.TaskCompletionResult("Accesso effettuato!");
                         Intent i = new Intent(getApplicationContext(),GroupActivity.class);
