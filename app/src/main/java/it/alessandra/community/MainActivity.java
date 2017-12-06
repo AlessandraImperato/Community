@@ -1,6 +1,8 @@
 package it.alessandra.community;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -16,13 +18,28 @@ import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity {
 
+    private SharedPreferences preferences;
+    private String control;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent i = new Intent(getApplicationContext(),LoginActivity.class);
-        startActivity(i);
+        control = "";
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        control = preferences.getString("USERNAME","noLog"); //noLog = valore di default
+
+        if(control.equals("noLog")){
+            Intent i = new Intent(getApplicationContext(),LoginActivity.class);
+            startActivity(i);
+        }
+
+        else if (control.equals("loginOk")){
+            Intent i = new Intent(getApplicationContext(),GroupActivity.class);
+            startActivity(i);
+        }
 
     }
 }

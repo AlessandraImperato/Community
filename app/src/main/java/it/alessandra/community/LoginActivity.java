@@ -3,6 +3,7 @@ package it.alessandra.community;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -48,7 +49,7 @@ public class LoginActivity extends AppCompatActivity implements TaskDelegate{
                 restCall(url);
             }
         });
-        
+
     }
 
     public void restCall(String url){
@@ -61,19 +62,22 @@ public class LoginActivity extends AppCompatActivity implements TaskDelegate{
                 if(statusCode == 200){
                     String text = new String (responseBody);
                     if(text.equals(password)){
-                        Toast.makeText(getApplicationContext(),"Accesso effettuato",Toast.LENGTH_LONG).show();
+                        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString("USERNAME", "loginOk");
+                        editor.commit();
+                        delegate.TaskCompletionResult("Accesso effettuato!");
                         Intent i = new Intent(getApplicationContext(),GroupActivity.class);
                         startActivity(i);
-                        //shared preference
                     }
                     else {
-                        Toast.makeText(getApplicationContext(),"Accesso negato",Toast.LENGTH_LONG).show();
+                        delegate.TaskCompletionResult("Accesso negato!");
                     }
                     }
                 }
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Toast.makeText(getApplicationContext(),"Accesso negato",Toast.LENGTH_LONG).show();
+                delegate.TaskCompletionResult("Accesso negato!");
             }
         });
     }
@@ -82,8 +86,6 @@ public class LoginActivity extends AppCompatActivity implements TaskDelegate{
     public void TaskCompletionResult(String result) {
         dialog.dismiss();
         dialog.cancel();
-
-       /* String nomeFile = "File";
-        InternalStorage.writeObject(this,nomeFile,supermercato);*/
+        Toast.makeText(getApplicationContext(),result,Toast.LENGTH_LONG).show();
     }
 }
