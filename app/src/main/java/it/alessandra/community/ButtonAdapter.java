@@ -47,7 +47,7 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ViewHolder
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(context,PostActivity.class);
-                i.putExtra("GRUPPO",nomeGruppo); //da passare alla PostActivity
+                i.putExtra("NOMEGRUPPO",nomeGruppo); //da passare alla PostActivity
                 (v.getContext()).startActivity(i);
             }
         });
