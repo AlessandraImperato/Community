@@ -30,9 +30,11 @@ public class GroupActivity extends AppCompatActivity implements TaskDelegate{
     private ProgressDialog dialog;
     private TaskDelegate delegate;
     private List<Gruppo> gruppi;
+    private List<Gruppo> listagruppi;
     private RecyclerView recyclerView;
     private ButtonAdapter buttonAdapter;
     private LinearLayoutManager linearLayoutManager;
+    private Community community;
 
 
     @Override
@@ -45,16 +47,22 @@ public class GroupActivity extends AppCompatActivity implements TaskDelegate{
 
         textView = (TextView) findViewById(R.id.textUser);
         textView.setText(username);
+
         recyclerView = (RecyclerView) findViewById(R.id.recyclerv);
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-
-        gruppi = new ArrayList<>();
         delegate = this;
+        community = (Community) InternalStorage.readObject(getApplicationContext(),"GRUPPI");
 
-        String url = "/" + username + "/Gruppi.json";
-        restCallGroup(url);
+        if(community == null){
+            String url = "/" + username + "/Gruppi.json";
+            restCallGroup(url);
+        } else{
+            listagruppi = community.getGruppi();
+            buttonAdapter = new ButtonAdapter(listagruppi,getApplicationContext());
+            recyclerView.setAdapter(buttonAdapter);
+        }
 
     }
 
@@ -69,6 +77,8 @@ public class GroupActivity extends AppCompatActivity implements TaskDelegate{
                     String text = new String (responseBody);
                     try {
                         gruppi = JsonParse.getList(text);
+                        community = new Community(gruppi);
+                        //InternalStorage.writeObject(getApplicationContext(),"GRUPPI",community); // salvo la lista dei gruppi in community su file
                         delegate.TaskCompletionResult("Gruppi caricati");
                     }catch (JSONException e){
                         e.printStackTrace();
@@ -88,6 +98,7 @@ public class GroupActivity extends AppCompatActivity implements TaskDelegate{
         dialog.cancel();
         buttonAdapter = new ButtonAdapter(gruppi,getApplicationContext());
         recyclerView.setAdapter(buttonAdapter);
+        InternalStorage.writeObject(getApplicationContext(),"GRUPPI",community); // salvo la lista dei gruppi in community su file
         Toast.makeText(getApplicationContext(),result,Toast.LENGTH_LONG).show();
     }
 }
