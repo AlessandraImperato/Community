@@ -9,7 +9,7 @@ import com.loopj.android.http.RequestParams;
  */
 
 public class FirebaseRestClient {
-    private static final String BASE_URL = "https://dbcommunity-cf2e7.firebaseio.com/Users";
+    private static final String BASE_URL = "https://dbcommunity-cf2e7.firebaseio.com/";
 
     private static AsyncHttpClient client = new AsyncHttpClient();
 

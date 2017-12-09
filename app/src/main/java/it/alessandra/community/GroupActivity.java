@@ -56,7 +56,7 @@ public class GroupActivity extends AppCompatActivity implements TaskDelegate{
         community = (Community) InternalStorage.readObject(getApplicationContext(),"GRUPPI");
 
         if(community == null){
-            String url = "/" + username + "/Gruppi.json";
+            String url = "Users/" + username + "/Gruppi.json";
             restCallGroup(url);
         } else{
             listagruppi = community.getGruppi();
@@ -76,9 +76,8 @@ public class GroupActivity extends AppCompatActivity implements TaskDelegate{
                 if(statusCode == 200){
                     String text = new String (responseBody);
                     try {
-                        gruppi = JsonParse.getList(text);
+                        gruppi = JsonParse.getListGroup(text);
                         community = new Community(gruppi);
-                        //InternalStorage.writeObject(getApplicationContext(),"GRUPPI",community); // salvo la lista dei gruppi in community su file
                         delegate.TaskCompletionResult("Gruppi caricati");
                     }catch (JSONException e){
                         e.printStackTrace();

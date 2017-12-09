@@ -26,4 +26,15 @@ public class Community implements Serializable {
     public void setGruppi(List<Gruppo> gruppi) {
         this.gruppi = gruppi;
     }
+
+    public Gruppo getGroupByName(String nomeGruppo){
+        Gruppo gruppo = new Gruppo();
+        for(Gruppo tmp : gruppi){
+            if (tmp.getNome().equals(nomeGruppo)){
+                gruppo = tmp;
+            }
+            break;
+        }
+        return gruppo;
+    }
 }
