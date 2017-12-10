@@ -100,4 +100,5 @@ public class GroupActivity extends AppCompatActivity implements TaskDelegate{
         InternalStorage.writeObject(getApplicationContext(),"GRUPPI",community); // salvo la lista dei gruppi in community su file
         Toast.makeText(getApplicationContext(),result,Toast.LENGTH_LONG).show();
     }
+
 }

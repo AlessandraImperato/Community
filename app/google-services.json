@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "111824018707-olf1eu2g7ep8usiq955tboiad001h2if.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.alessandra.community",
+            "certificate_hash": "2d6a9eb099bf806844af892d6967a37eb88ee71f"
+          }
+        },
+        {
           "client_id": "111824018707-n6nu99lfke5cpt7n4cncsl3i5t1g4e7u.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

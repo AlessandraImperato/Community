@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity implements TaskDelegate{
             public void onClick(View v) {
                 username = user.getText().toString();
                 password = pass.getText().toString();
-                String url ="/"+username+"/password.json";
+                String url ="Users/"+username+"/password.json";
 
                 restCall(url);
             }

@@ -86,6 +86,7 @@ public class PostActivity extends AppCompatActivity implements TaskDelegate{
                     String text = new String (responseBody);
                     try {
                         listapost = JsonParse.getListPost(text);
+                        gruppo.setNome(nomeGruppo);
                         gruppo.setListaPost(listapost);
                         delegate.TaskCompletionResult("Post caricati");
                     }catch (JSONException e){
