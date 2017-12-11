@@ -38,7 +38,6 @@ public class JsonParse {
     }
 
     public static List<Post> getListPost(String json) throws JSONException{
-
         List<Post> listaPost = new ArrayList<>();
         try{
             JSONObject jsonObject = new JSONObject(json); // json con tutti i post
@@ -46,6 +45,9 @@ public class JsonParse {
             while(posts.hasNext()){
                 Post post = new Post();
                 String oneKey = posts.next(); // post 1 / post 2 ?
+                if (oneKey.equals("LastDataChange")){ /**/
+                // devo creare la lista di post, quindi salto il nodo "LastDataChange
+                }else{ /**/
                 post.setId(oneKey);
 
                 JSONObject onePost = jsonObject.getJSONObject(oneKey); //json con tutti i campi
@@ -67,7 +69,7 @@ public class JsonParse {
                     }
                 }
                 listaPost.add(post);
-            }
+            }}
         }catch (JSONException e){
             e.printStackTrace();
         }

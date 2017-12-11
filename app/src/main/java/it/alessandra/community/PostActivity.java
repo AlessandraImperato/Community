@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,8 +17,13 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONException;
 
+import java.text.Format;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -66,9 +72,18 @@ public class PostActivity extends AppCompatActivity implements TaskDelegate{
 
         delegate = this;
         community = (Community) InternalStorage.readObject(getApplicationContext(),"GRUPPI");
-
         gruppo = community.getGroupByName(nomeGruppo);
         listapost = gruppo.getListaPost();
+        // Log.i("data",""+gruppo.getLastChange()); => Mon Dec 11 16:15:26 GMT+01:00 2017
+
+        mSwipeRefreshLayout = findViewById(R.id.container);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                String url = "Communities/" + nomeGruppo + "/LastDataChange.json";
+                restCallLastChangeDate(url);
+            }
+        });
 
 
         if(listapost.size() == 0){
@@ -109,6 +124,32 @@ public class PostActivity extends AppCompatActivity implements TaskDelegate{
         });
     }
 
+    public void restCallLastChangeDate(String url){
+        FirebaseRestClient.get(url, null, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                if(statusCode == 200){
+                    String text = new String (responseBody);
+                    String data = text.replace('"',' ');
+                    Date lastDataChange = formatToDate(data);
+
+                    if (lastDataChange.after(gruppo.getLastChange())){ // se la data su firebase è maggiore della data del gruppo =>
+                        String newUrl = "Communities/" + nomeGruppo + ".json";// => devo aggiornare con una nuova chiamata rest
+                        restCallPost(newUrl);
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }else{
+                        Toast.makeText(getApplicationContext(),"Lista post aggiornata",Toast.LENGTH_LONG).show();
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                delegate.TaskCompletionResult("");
+            }
+        });
+    }
+
     @Override
     public void TaskCompletionResult(String result) {
         dialog.dismiss();
@@ -116,7 +157,12 @@ public class PostActivity extends AppCompatActivity implements TaskDelegate{
         postAdapter = new PostAdapter(listapost,getApplication());
         recyclerPost.setAdapter(postAdapter);
         InternalStorage.writeObject(getApplicationContext(),"GRUPPI",community);
-        //InternalStorage.writeObject(getApplicationContext(),"POST",listapost);
         Toast.makeText(getApplicationContext(),result,Toast.LENGTH_LONG).show();
     }
+
+    public static Date formatToDate(String dateString){ // trasformo la data da stringa a Date
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ITALY);
+        return format.parse(dateString,new ParsePosition(0));
+    }
+
 }

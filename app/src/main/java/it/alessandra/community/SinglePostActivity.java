@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,9 +75,17 @@ public class SinglePostActivity extends AppCompatActivity implements TaskDelegat
         title = post.getTitolo();
         dataCreazione = post.getDataCreazione();
 
-        String url = "Communities/" + nomeGruppo + "/" + idPost + ".json";
+        post = (Post) InternalStorage.readObject(getApplicationContext(),"POST");
 
-        restCallSinglePost(url);
+        if(post == null){
+            String url = "Communities/" + nomeGruppo + "/" + idPost + ".json";
+            restCallSinglePost(url);
+        }else{
+            autore.setText(nomAutore);
+            titolo.setText(title);
+            data.setText(formatDate(dataCreazione));
+            body.setText(post.getBody());
+        }
 
     }
 
@@ -114,7 +123,7 @@ public class SinglePostActivity extends AppCompatActivity implements TaskDelegat
         data.setText(formatDate(dataCreazione));
         body.setText(post.getBody());
         InternalStorage.writeObject(getApplicationContext(),"GRUPPI",community);
-        //InternalStorage.writeObject(getApplicationContext(),"POST",listapost);
+        InternalStorage.writeObject(getApplicationContext(),"POST",post);
         Toast.makeText(getApplicationContext(),result,Toast.LENGTH_LONG).show();
     }
     public String formatDate(Date date){
