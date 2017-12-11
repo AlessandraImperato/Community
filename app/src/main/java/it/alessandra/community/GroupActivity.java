@@ -76,7 +76,7 @@ public class GroupActivity extends AppCompatActivity implements TaskDelegate{
                 if(statusCode == 200){
                     String text = new String (responseBody);
                     try {
-                        gruppi = JsonParse.getListGroup(text);
+                        gruppi = JsonParse.getListGroup(text); // qui in automatico si setta la data di creazione del gruppo
                         community = new Community(gruppi);
                         delegate.TaskCompletionResult("Gruppi caricati");
                     }catch (JSONException e){

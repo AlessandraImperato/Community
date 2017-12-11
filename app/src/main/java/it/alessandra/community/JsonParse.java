@@ -45,9 +45,9 @@ public class JsonParse {
             while(posts.hasNext()){
                 Post post = new Post();
                 String oneKey = posts.next(); // post 1 / post 2 ?
-                if (oneKey.equals("LastDataChange")){ /**/
+                if (oneKey.equals("LastDataChange")){
                 // devo creare la lista di post, quindi salto il nodo "LastDataChange
-                }else{ /**/
+                }else{
                 post.setId(oneKey);
 
                 JSONObject onePost = jsonObject.getJSONObject(oneKey); //json con tutti i campi

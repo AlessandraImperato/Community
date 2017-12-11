@@ -44,6 +44,7 @@ public class PostActivity extends AppCompatActivity implements TaskDelegate{
     private String nomeGruppo;
     private SharedPreferences preferencesNameGroup;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private String urlDataChange;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,19 +75,20 @@ public class PostActivity extends AppCompatActivity implements TaskDelegate{
         community = (Community) InternalStorage.readObject(getApplicationContext(),"GRUPPI");
         gruppo = community.getGroupByName(nomeGruppo);
         listapost = gruppo.getListaPost();
-        // Log.i("data",""+gruppo.getLastChange()); => Mon Dec 11 16:15:26 GMT+01:00 2017
+        urlDataChange = "Communities/" + nomeGruppo + "/LastDataChange.json";
+
+        // controllo, SEMPRE APPENA APRO I POST, se ci sono state modifiche
+        restCallLastChangeDate(urlDataChange);
 
         mSwipeRefreshLayout = findViewById(R.id.container);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                String url = "Communities/" + nomeGruppo + "/LastDataChange.json";
-                restCallLastChangeDate(url);
+                restCallLastChangeDate(urlDataChange);
             }
         });
 
-
-        if(listapost.size() == 0){
+       /* if(listapost.size() == 0){
             //rest
             String url = "Communities/" + nomeGruppo + ".json";
             restCallPost(url);
@@ -94,7 +96,7 @@ public class PostActivity extends AppCompatActivity implements TaskDelegate{
             //stampiamo i post
             postAdapter = new PostAdapter(listapost,getApplication());
             recyclerPost.setAdapter(postAdapter);
-        }
+        }*/
     }
 
     public void restCallPost(String url){
@@ -136,9 +138,12 @@ public class PostActivity extends AppCompatActivity implements TaskDelegate{
                     if (lastDataChange.after(gruppo.getLastChange())){ // se la data su firebase è maggiore della data del gruppo =>
                         String newUrl = "Communities/" + nomeGruppo + ".json";// => devo aggiornare con una nuova chiamata rest
                         restCallPost(newUrl);
+                        gruppo.setLastChange(lastDataChange); //aggiorno la data del gruppo
                         mSwipeRefreshLayout.setRefreshing(false);
                     }else{
                         Toast.makeText(getApplicationContext(),"Lista post aggiornata",Toast.LENGTH_LONG).show();
+                        postAdapter = new PostAdapter(listapost,getApplication());
+                        recyclerPost.setAdapter(postAdapter);
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
                 }
@@ -161,8 +166,12 @@ public class PostActivity extends AppCompatActivity implements TaskDelegate{
     }
 
     public static Date formatToDate(String dateString){ // trasformo la data da stringa a Date
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ITALY);
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss", Locale.ITALY);
         return format.parse(dateString,new ParsePosition(0));
+    }
+
+    public void dateControl(){
+
     }
 
 }
