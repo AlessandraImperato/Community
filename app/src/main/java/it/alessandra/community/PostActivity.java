@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +31,6 @@ import cz.msebera.android.httpclient.Header;
 public class PostActivity extends AppCompatActivity implements TaskDelegate{
 
     private RecyclerView recyclerPost;
-    private TextView textUser;
     private List<Post> listapost;
     private Gruppo gruppo;
     private LinearLayoutManager linearLayoutManager;
@@ -42,7 +42,7 @@ public class PostActivity extends AppCompatActivity implements TaskDelegate{
     private PostAdapter postAdapter;
     private Community community;
     private String nomeGruppo;
-    private SharedPreferences preferencesNameGroup;
+    //private SharedPreferences preferencesNameGroup;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private String urlDataChange;
 
@@ -56,13 +56,13 @@ public class PostActivity extends AppCompatActivity implements TaskDelegate{
         Intent i = getIntent();
         nomeGruppo = i.getStringExtra("NOMEGRUPPO");
 
-        preferencesNameGroup = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor editor = preferencesNameGroup.edit();
-        editor.putString("NomeGruppo",nomeGruppo);
-        editor.commit();
-
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         username = preferences.getString("USERNAME","user");
+
+        //preferencesNameGroup = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("NomeGruppo",nomeGruppo);
+        editor.commit();
 
         textView = findViewById(R.id.textUser);
         textView.setText(username);
@@ -127,6 +127,9 @@ public class PostActivity extends AppCompatActivity implements TaskDelegate{
     }
 
     public void restCallLastChangeDate(String url){
+        dialog = new ProgressDialog(PostActivity.this);
+        dialog.setMessage("Caricamento");
+        dialog.show();
         FirebaseRestClient.get(url, null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -136,16 +139,21 @@ public class PostActivity extends AppCompatActivity implements TaskDelegate{
                     Date lastDataChange = formatToDate(data);
 
                     if (lastDataChange.after(gruppo.getLastChange())){ // se la data su firebase è maggiore della data del gruppo =>
-                        String newUrl = "Communities/" + nomeGruppo + ".json";// => devo aggiornare con una nuova chiamata rest
+                        String newUrl = "Communities/" + nomeGruppo + "/Post.json";// => devo aggiornare con una nuova chiamata rest
                         restCallPost(newUrl);
                         gruppo.setLastChange(lastDataChange); //aggiorno la data del gruppo
+                        dialog.dismiss();
+                        dialog.cancel();
                         mSwipeRefreshLayout.setRefreshing(false);
                     }else{
                         Toast.makeText(getApplicationContext(),"Lista post aggiornata",Toast.LENGTH_LONG).show();
                         postAdapter = new PostAdapter(listapost,getApplication());
                         recyclerPost.setAdapter(postAdapter);
+                        dialog.dismiss();
+                        dialog.cancel();
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
+
                 }
             }
             @Override
@@ -170,8 +178,8 @@ public class PostActivity extends AppCompatActivity implements TaskDelegate{
         return format.parse(dateString,new ParsePosition(0));
     }
 
-    public void dateControl(){
-
+    public void fabAddPost(View view) {
+        Intent i = new Intent(getApplicationContext(),NewPostActivity.class);
+        startActivity(i);
     }
-
 }

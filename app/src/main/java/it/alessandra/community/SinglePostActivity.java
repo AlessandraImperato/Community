@@ -39,7 +39,7 @@ public class SinglePostActivity extends AppCompatActivity implements TaskDelegat
     private TaskDelegate delegate;
     private List<Post> listaPost;
     private Post post;
-    private SharedPreferences preferencesNomeGruppo;
+   // private SharedPreferences preferencesNomeGruppo;
     private String nomAutore;
     private String title;
     private Date dataCreazione;
@@ -64,8 +64,8 @@ public class SinglePostActivity extends AppCompatActivity implements TaskDelegat
 
         Intent i = getIntent();
         String idPost = i.getStringExtra("IdPost");
-        preferencesNomeGruppo = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String nomeGruppo = preferencesNomeGruppo.getString("NomeGruppo", "");
+        //preferencesNomeGruppo = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String nomeGruppo = preferences.getString("NomeGruppo", "");
 
         community = (Community) InternalStorage.readObject(getApplicationContext(),"GRUPPI");
         gruppo = community.getGroupByName(nomeGruppo);
@@ -78,7 +78,7 @@ public class SinglePostActivity extends AppCompatActivity implements TaskDelegat
         post = (Post) InternalStorage.readObject(getApplicationContext(),"POST");
 
         if(post == null){
-            String url = "Communities/" + nomeGruppo + "/" + idPost + ".json";
+            String url = "Communities/" + nomeGruppo + "/Post/" + idPost + ".json";
             restCallSinglePost(url);
         }else{
             autore.setText(nomAutore);

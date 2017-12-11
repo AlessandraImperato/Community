@@ -40,6 +40,14 @@ public class Post implements Serializable {
 
     }
 
+    public Post(String autore, String titolo, Date dataCreazione, String body){
+        this.autore = autore;
+        this.titolo = titolo;
+        this.dataCreazione = dataCreazione;
+        this.id = null;
+        this.body = body;
+    }
+
     public String getAutore() {
         return autore;
     }

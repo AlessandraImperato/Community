@@ -25,82 +25,92 @@ public class JsonParse {
         try {
             JSONObject jsonObject = new JSONObject(json);
             Iterator<String> groups = jsonObject.keys();
-            while (groups.hasNext()){
-             Gruppo gruppo = new Gruppo();
-             String nomeGruppo = groups.next();
-             gruppo.setNome(nomeGruppo);
-             gruppi.add(gruppo);
+            while (groups.hasNext()) {
+                Gruppo gruppo = new Gruppo();
+                String nomeGruppo = groups.next();
+                gruppo.setNome(nomeGruppo);
+                gruppi.add(gruppo);
             }
-        }catch (JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return gruppi;
     }
 
-    public static List<Post> getListPost(String json) throws JSONException{
+    public static List<Post> getListPost(String json) throws JSONException {
         List<Post> listaPost = new ArrayList<>();
-        try{
+        try {
             JSONObject jsonObject = new JSONObject(json); // json con tutti i post
             Iterator<String> posts = jsonObject.keys(); // itera i post
-            while(posts.hasNext()){
+            while (posts.hasNext()) {
                 Post post = new Post();
-                String oneKey = posts.next(); // post 1 / post 2 ?
-                if (oneKey.equals("LastDataChange")){
-                // devo creare la lista di post, quindi salto il nodo "LastDataChange
-                }else{
+                String oneKey = posts.next(); // post 1 / post 2
                 post.setId(oneKey);
 
                 JSONObject onePost = jsonObject.getJSONObject(oneKey); //json con tutti i campi
                 Iterator<String> field = onePost.keys(); //itera i campi del singolo post
-                while (field.hasNext()){
+                while (field.hasNext()) {
                     String oneKey2 = field.next();
-                    if(oneKey2.equals("Autore")){
+                    if (oneKey2.equals("Autore")) {
                         String autore = onePost.getString(oneKey2);
                         post.setAutore(autore);
-                    }
-                    else if(oneKey2.equals("Titolo")){
+                    } else if (oneKey2.equals("Titolo")) {
                         String titolo = onePost.getString(oneKey2);
                         post.setTitolo(titolo);
-                    }
-                    else if(oneKey2.equals("Data")){
+                    } else if (oneKey2.equals("Data")) {
                         String data = onePost.getString(oneKey2);
                         Date dataCreazione = formatDate(data);
                         post.setDataCreazione(dataCreazione);
                     }
                 }
                 listaPost.add(post);
-            }}
-        }catch (JSONException e){
+            }
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return listaPost;
     }
 
-    public static Post getPost(String json) throws JSONException{
+    public static Post getPost(String json) throws JSONException {
         // per chiamata rest del singolo post
         Post post = new Post();
-        try{
+        try {
             JSONObject jsonObject = new JSONObject(json);
             Iterator<String> field = jsonObject.keys();
 
-            while (field.hasNext()){
+            while (field.hasNext()) {
                 String oneKey = field.next();
-                if(oneKey.equals("Body")){
+                if (oneKey.equals("Body")) {
                     String body = jsonObject.getString(oneKey);
                     post.setBody(body);
                     break;
                 }
             }
 
-        }catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return post;
     }
 
-    public static Date formatDate(String dateString){ // trasformo la data da stringa a Date
+    public static int key(String json) {
+        int index = 1;
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            Iterator iterator = jsonObject.keys();
+            while (iterator.hasNext()) {
+                index++;
+                iterator.next();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return index;
+    }
+
+    public static Date formatDate(String dateString) { // trasformo la data da stringa a Date
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ITALY);
-        return format.parse(dateString,new ParsePosition(0));
+        return format.parse(dateString, new ParsePosition(0));
     }
 
 }
