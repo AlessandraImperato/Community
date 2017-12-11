@@ -12,17 +12,32 @@ public class Post implements Serializable {
     private String autore;
     private String titolo;
     private Date dataCreazione;
+    private String body;
+    private String id;
 
-    public Post(){
+    public Post() {
         this.autore = null;
         this.titolo = null;
         this.dataCreazione = new Date();
+        this.id = null;
+        this.body = null;
     }
 
-    public Post(String autore, String titolo, Date dataCreazione){
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public Post(String autore, String titolo, Date dataCreazione) {
         this.autore = autore;
         this.titolo = titolo;
         this.dataCreazione = dataCreazione;
+        this.id = null;
+        this.body = null;
+
     }
 
     public String getAutore() {
@@ -47,5 +62,13 @@ public class Post implements Serializable {
 
     public void setDataCreazione(Date dataCreazione) {
         this.dataCreazione = dataCreazione;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

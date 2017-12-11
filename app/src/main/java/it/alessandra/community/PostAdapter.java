@@ -1,5 +1,6 @@
 package it.alessandra.community;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
@@ -44,10 +45,19 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final PostAdapter.ViewHolder holder, int position) {
-        Post tmp = listaPost.get(position);
+        final Post tmp = listaPost.get(position);
         holder.autorePost.setText(tmp.getAutore());
         holder.titoloPost.setText(tmp.getTitolo());
         holder.dataCreazione.setText(formatDate(tmp.getDataCreazione()));
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context,SinglePostActivity.class);
+                String id = tmp.getId();
+                intent.putExtra("IdPost", id);
+                (v.getContext()).startActivity(intent);
+            }
+        });
     }
 
     @Override

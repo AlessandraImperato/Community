@@ -45,10 +45,10 @@ public class GroupActivity extends AppCompatActivity implements TaskDelegate{
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         username = preferences.getString("USERNAME","user"); // mi serve per la rest per i gruppi
 
-        textView = (TextView) findViewById(R.id.textUser);
+        textView = findViewById(R.id.textUser);
         textView.setText(username);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerv);
+        recyclerView = findViewById(R.id.recyclerv);
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 

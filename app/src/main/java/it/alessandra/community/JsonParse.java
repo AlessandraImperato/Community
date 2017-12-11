@@ -46,6 +46,7 @@ public class JsonParse {
             while(posts.hasNext()){
                 Post post = new Post();
                 String oneKey = posts.next(); // post 1 / post 2 ?
+                post.setId(oneKey);
 
                 JSONObject onePost = jsonObject.getJSONObject(oneKey); //json con tutti i campi
                 Iterator<String> field = onePost.keys(); //itera i campi del singolo post
@@ -71,6 +72,28 @@ public class JsonParse {
             e.printStackTrace();
         }
         return listaPost;
+    }
+
+    public static Post getPost(String json) throws JSONException{
+        // per chiamata rest del singolo post
+        Post post = new Post();
+        try{
+            JSONObject jsonObject = new JSONObject(json);
+            Iterator<String> field = jsonObject.keys();
+
+            while (field.hasNext()){
+                String oneKey = field.next();
+                if(oneKey.equals("Body")){
+                    String body = jsonObject.getString(oneKey);
+                    post.setBody(body);
+                    break;
+                }
+            }
+
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return post;
     }
 
     public static Date formatDate(String dateString){ // trasformo la data da stringa a Date
