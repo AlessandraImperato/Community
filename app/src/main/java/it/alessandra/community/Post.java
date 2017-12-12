@@ -48,6 +48,14 @@ public class Post implements Serializable {
         this.body = body;
     }
 
+    public Post(String id, String autore, String titolo, Date dataCreazione){
+        this.autore = autore;
+        this.titolo = titolo;
+        this.dataCreazione = dataCreazione;
+        this.body = body;
+        this.id = id;
+    }
+
     public String getAutore() {
         return autore;
     }

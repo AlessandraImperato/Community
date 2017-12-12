@@ -130,7 +130,8 @@ public class NewPostActivity extends AppCompatActivity implements TaskDelegate{
         dialog.cancel();
         listaPost.add(newPost);
         gruppo.setListaPost(listaPost);
-        InternalStorage.writeObject(getApplicationContext(),"GRUPPI",community);
+        //InternalStorage.writeObject(getApplicationContext(),"GRUPPI",community);
+        //gruppo.setLastChange(newPost.getDataCreazione());
         Toast.makeText(getApplicationContext(),result,Toast.LENGTH_LONG).show();
     }
 }

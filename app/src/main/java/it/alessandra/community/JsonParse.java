@@ -71,9 +71,9 @@ public class JsonParse {
         return listaPost;
     }
 
-    public static Post getPost(String json) throws JSONException {
+    public static Post getPost(String json,String autore,String titolo, Date date, String id) throws JSONException {
         // per chiamata rest del singolo post
-        Post post = new Post();
+        Post post = new Post(id,autore,titolo,date);
         try {
             JSONObject jsonObject = new JSONObject(json);
             Iterator<String> field = jsonObject.keys();

@@ -138,7 +138,7 @@ public class PostActivity extends AppCompatActivity implements TaskDelegate{
                     if (lastDataChange.after(gruppo.getLastChange())){ // se la data su firebase è maggiore della data del gruppo =>
                         String newUrl = "Communities/" + nomeGruppo + "/Post.json";// => devo aggiornare con una nuova chiamata rest
                         restCallPost(newUrl);
-                        gruppo.setLastChange(lastDataChange); //aggiorno la data del gruppo
+                        //gruppo.setLastChange(lastDataChange); //aggiorno la data del gruppo
                         mSwipeRefreshLayout.setRefreshing(false);
                     }else{
                         Toast.makeText(getApplicationContext(),"Lista post aggiornata",Toast.LENGTH_LONG).show();

@@ -43,6 +43,7 @@ public class SinglePostActivity extends AppCompatActivity implements TaskDelegat
     private String nomAutore;
     private String title;
     private Date dataCreazione;
+    private String idPost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +64,7 @@ public class SinglePostActivity extends AppCompatActivity implements TaskDelegat
         textUser.setText(username);
 
         Intent i = getIntent();
-        String idPost = i.getStringExtra("IdPost");
-        //preferencesNomeGruppo = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        idPost = i.getStringExtra("IdPost");
         String nomeGruppo = preferences.getString("NomeGruppo", "");
 
         community = (Community) InternalStorage.readObject(getApplicationContext(),"GRUPPI");
@@ -75,7 +75,17 @@ public class SinglePostActivity extends AppCompatActivity implements TaskDelegat
         title = post.getTitolo();
         dataCreazione = post.getDataCreazione();
 
-        post = (Post) InternalStorage.readObject(getApplicationContext(),"POST");
+        if(post.getBody() == null){
+            String url = "Communities/" + nomeGruppo + "/Post/" + idPost + ".json";
+            restCallSinglePost(url);
+        }else{
+            autore.setText(nomAutore);
+            titolo.setText(title);
+            data.setText(formatDate(dataCreazione));
+            body.setText(post.getBody());
+        }
+
+       /* post = (Post) InternalStorage.readObject(getApplicationContext(),"POST");
 
         if(post == null){
             String url = "Communities/" + nomeGruppo + "/Post/" + idPost + ".json";
@@ -85,7 +95,9 @@ public class SinglePostActivity extends AppCompatActivity implements TaskDelegat
             titolo.setText(title);
             data.setText(formatDate(dataCreazione));
             body.setText(post.getBody());
-        }
+        }*/
+        /*String url = "Communities/" + nomeGruppo + "/Post/" + idPost + ".json";
+        restCallSinglePost(url);*/
 
     }
 
@@ -100,7 +112,7 @@ public class SinglePostActivity extends AppCompatActivity implements TaskDelegat
                 if(statusCode == 200){
                     String text = new String (responseBody);
                     try {
-                         post = JsonParse.getPost(text);
+                         post = JsonParse.getPost(text,nomAutore,title,dataCreazione,idPost);
                         delegate.TaskCompletionResult("Post caricato");
                     }catch (JSONException e){
                         e.printStackTrace();
@@ -123,7 +135,7 @@ public class SinglePostActivity extends AppCompatActivity implements TaskDelegat
         data.setText(formatDate(dataCreazione));
         body.setText(post.getBody());
         InternalStorage.writeObject(getApplicationContext(),"GRUPPI",community);
-        InternalStorage.writeObject(getApplicationContext(),"POST",post);
+        //InternalStorage.writeObject(getApplicationContext(),"POST",post);
         Toast.makeText(getApplicationContext(),result,Toast.LENGTH_LONG).show();
     }
     public String formatDate(Date date){
