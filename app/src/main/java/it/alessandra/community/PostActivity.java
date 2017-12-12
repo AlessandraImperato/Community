@@ -127,9 +127,6 @@ public class PostActivity extends AppCompatActivity implements TaskDelegate{
     }
 
     public void restCallLastChangeDate(String url){
-        dialog = new ProgressDialog(PostActivity.this);
-        dialog.setMessage("Caricamento");
-        dialog.show();
         FirebaseRestClient.get(url, null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -142,15 +139,11 @@ public class PostActivity extends AppCompatActivity implements TaskDelegate{
                         String newUrl = "Communities/" + nomeGruppo + "/Post.json";// => devo aggiornare con una nuova chiamata rest
                         restCallPost(newUrl);
                         gruppo.setLastChange(lastDataChange); //aggiorno la data del gruppo
-                        dialog.dismiss();
-                        dialog.cancel();
                         mSwipeRefreshLayout.setRefreshing(false);
                     }else{
                         Toast.makeText(getApplicationContext(),"Lista post aggiornata",Toast.LENGTH_LONG).show();
                         postAdapter = new PostAdapter(listapost,getApplication());
                         recyclerPost.setAdapter(postAdapter);
-                        dialog.dismiss();
-                        dialog.cancel();
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
 

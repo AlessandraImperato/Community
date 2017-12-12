@@ -1,6 +1,7 @@
 package it.alessandra.community;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import java.util.Date;
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -35,11 +37,16 @@ public class NewPostActivity extends AppCompatActivity implements TaskDelegate{
     private static FirebaseDatabase database;
     private DatabaseReference databaseReference;
     private DatabaseReference databaseReferenceDate;
+    private Intent i;
+    private List<Post> listaPost;
+    private Gruppo gruppo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_post);
+
+        i = getIntent();
 
         delegate = this;
 
@@ -52,6 +59,10 @@ public class NewPostActivity extends AppCompatActivity implements TaskDelegate{
         username = preferences.getString("USERNAME","user");
         nomeGruppo = preferences.getString("NomeGruppo","");
         textUser.setText(username);
+
+        community = (Community) InternalStorage.readObject(getApplicationContext(),"GRUPPI");
+        gruppo = community.getGroupByName(nomeGruppo);
+        listaPost = gruppo.getListaPost();
 
         database = FirebaseDatabase.getInstance();
         String url = "https://dbcommunity-cf2e7.firebaseio.com/Communities/" + nomeGruppo + "/Post/";
@@ -97,6 +108,7 @@ public class NewPostActivity extends AppCompatActivity implements TaskDelegate{
                     databaseReference.child(generateKey(index)).child("Body").setValue(newPost.getBody());
                     databaseReferenceDate.setValue(dataCreazione);
                     delegate.TaskCompletionResult("Post aggiunto");
+                    finish();
                 }
             }
             @Override
@@ -116,6 +128,9 @@ public class NewPostActivity extends AppCompatActivity implements TaskDelegate{
     public void TaskCompletionResult(String result) {
         dialog.dismiss();
         dialog.cancel();
+        listaPost.add(newPost);
+        gruppo.setListaPost(listaPost);
+        InternalStorage.writeObject(getApplicationContext(),"GRUPPI",community);
         Toast.makeText(getApplicationContext(),result,Toast.LENGTH_LONG).show();
     }
 }
