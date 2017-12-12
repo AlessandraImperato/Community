@@ -13,12 +13,12 @@ import java.util.Locale;
 public class DataSet {
 
     public static Date formatToDate(String dateString){ // trasformo la data da stringa a Date
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss", Locale.ITALY);
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.ITALY);
         return format.parse(dateString,new ParsePosition(0));
     }
 
     public static String formatToString(Date date){
-        Format format = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss", Locale.ITALY);
+        Format format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.ITALY);
         return format.format(date);
     }
 }

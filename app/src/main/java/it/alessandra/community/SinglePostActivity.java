@@ -23,7 +23,7 @@ import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
-public class SinglePostActivity extends AppCompatActivity implements TaskDelegate {
+public class SinglePostActivity extends AppCompatActivity  {
 
     private Community community;
     private TextView titolo;
@@ -32,25 +32,20 @@ public class SinglePostActivity extends AppCompatActivity implements TaskDelegat
     private TextView data;
     private TextView textUser;
     private Gruppo gruppo;
-    private LinearLayoutManager linearLayoutManager;
     private SharedPreferences preferences;
     private String username;
-    private ProgressDialog dialog;
-    private TaskDelegate delegate;
     private List<Post> listaPost;
     private Post post;
-   // private SharedPreferences preferencesNomeGruppo;
     private String nomAutore;
     private String title;
     private Date dataCreazione;
     private String idPost;
+    private String bodyText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_post);
-
-        delegate = this;
 
         autore = findViewById(R.id.textautore);
         titolo = findViewById(R.id.texttitolo);
@@ -59,7 +54,6 @@ public class SinglePostActivity extends AppCompatActivity implements TaskDelegat
 
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         username = preferences.getString("USERNAME","user");
-
         textUser = findViewById(R.id.user);
         textUser.setText(username);
 
@@ -74,70 +68,14 @@ public class SinglePostActivity extends AppCompatActivity implements TaskDelegat
         nomAutore = post.getAutore();
         title = post.getTitolo();
         dataCreazione = post.getDataCreazione();
+        bodyText = post.getBody();
 
-        if(post.getBody() == null){
-            String url = "Communities/" + nomeGruppo + "/Post/" + idPost + ".json";
-            restCallSinglePost(url);
-        }else{
-            autore.setText(nomAutore);
-            titolo.setText(title);
-            data.setText(formatDate(dataCreazione));
-            body.setText(post.getBody());
-        }
-
-       /* post = (Post) InternalStorage.readObject(getApplicationContext(),"POST");
-
-        if(post == null){
-            String url = "Communities/" + nomeGruppo + "/Post/" + idPost + ".json";
-            restCallSinglePost(url);
-        }else{
-            autore.setText(nomAutore);
-            titolo.setText(title);
-            data.setText(formatDate(dataCreazione));
-            body.setText(post.getBody());
-        }*/
-        /*String url = "Communities/" + nomeGruppo + "/Post/" + idPost + ".json";
-        restCallSinglePost(url);*/
-
-    }
-
-    public void restCallSinglePost(String url){
-        dialog = new ProgressDialog(SinglePostActivity.this);
-        dialog.setMessage("Caricamento Post");
-        dialog.show();
-
-        FirebaseRestClient.get(url, null, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                if(statusCode == 200){
-                    String text = new String (responseBody);
-                    try {
-                         post = JsonParse.getPost(text,nomAutore,title,dataCreazione,idPost);
-                        delegate.TaskCompletionResult("Post caricato");
-                    }catch (JSONException e){
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                delegate.TaskCompletionResult("");
-            }
-        });
-    }
-    @Override
-    public void TaskCompletionResult(String result) {
-        dialog.dismiss();
-        dialog.cancel();
         autore.setText(nomAutore);
         titolo.setText(title);
         data.setText(formatDate(dataCreazione));
-        body.setText(post.getBody());
-        InternalStorage.writeObject(getApplicationContext(),"GRUPPI",community);
-        //InternalStorage.writeObject(getApplicationContext(),"POST",post);
-        Toast.makeText(getApplicationContext(),result,Toast.LENGTH_LONG).show();
+        body.setText(bodyText);
     }
+
     public String formatDate(Date date){
         Format format = new SimpleDateFormat("dd/MM/yyyy", Locale.ITALY);
         return format.format(date);

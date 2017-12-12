@@ -119,8 +119,7 @@ public class NewPostActivity extends AppCompatActivity implements TaskDelegate{
     }
 
     public String generateKey(int index){
-        String keyG = "";
-        keyG = "post " + index;
+        String keyG = "post " + index;
         return keyG;
     }
 
@@ -130,8 +129,8 @@ public class NewPostActivity extends AppCompatActivity implements TaskDelegate{
         dialog.cancel();
         listaPost.add(newPost);
         gruppo.setListaPost(listaPost);
-        //InternalStorage.writeObject(getApplicationContext(),"GRUPPI",community);
-        //gruppo.setLastChange(newPost.getDataCreazione());
+        gruppo.setLastChange(newPost.getDataCreazione());
+        InternalStorage.writeObject(getApplicationContext(),"GRUPPI",community);
         Toast.makeText(getApplicationContext(),result,Toast.LENGTH_LONG).show();
     }
 }

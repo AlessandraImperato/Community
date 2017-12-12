@@ -61,6 +61,9 @@ public class JsonParse {
                         String data = onePost.getString(oneKey2);
                         Date dataCreazione = formatDate(data);
                         post.setDataCreazione(dataCreazione);
+                    } else if(oneKey2.equals("Body")){
+                        String body = onePost.getString(oneKey2);
+                        post.setBody(body);
                     }
                 }
                 listaPost.add(post);
@@ -69,28 +72,6 @@ public class JsonParse {
             e.printStackTrace();
         }
         return listaPost;
-    }
-
-    public static Post getPost(String json,String autore,String titolo, Date date, String id) throws JSONException {
-        // per chiamata rest del singolo post
-        Post post = new Post(id,autore,titolo,date);
-        try {
-            JSONObject jsonObject = new JSONObject(json);
-            Iterator<String> field = jsonObject.keys();
-
-            while (field.hasNext()) {
-                String oneKey = field.next();
-                if (oneKey.equals("Body")) {
-                    String body = jsonObject.getString(oneKey);
-                    post.setBody(body);
-                    break;
-                }
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return post;
     }
 
     public static int key(String json) {
