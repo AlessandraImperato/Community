@@ -5,15 +5,19 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 
 import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -24,11 +28,46 @@ import com.google.firebase.database.FirebaseDatabase;
 public class PushNotification extends Service {
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private ChildEventListener handler;
-    private DatabaseReference usersReference;
+    private DatabaseReference reference;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String nomeGruppo = preferences.getString("NomeGruppo","");
+        reference = database.getReferenceFromUrl("https://dbcommunity-cf2e7.firebaseio.com/Communities/"+ nomeGruppo +
+                                                        "/Post");
+        handler = new ChildEventListener(){
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot.exists()) {
+                    activePushValidation(dataSnapshot.getKey()); //passa la chiave che ha ricevuto quella notifica
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot.exists()) {
+                    activePushValidation(dataSnapshot.getKey()); //passa la chiave che ha ricevuto quella notifica
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        reference.addChildEventListener(handler);
     }
 
     @Override
@@ -39,6 +78,7 @@ public class PushNotification extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        reference.removeEventListener(handler);
     }
 
     @Nullable
@@ -48,7 +88,7 @@ public class PushNotification extends Service {
     }
 
     public void activePushValidation(String commListener) { //crea un nuovo intent sulla setnotification activity
-        Intent intent = new Intent(this, GroupActivity.class); //su questa intent possiamo fare i put extra ad es per passare dei parametri
+        Intent intent = new Intent(this, PostActivity.class); //su questa intent possiamo fare i put extra ad es per passare dei parametri
         sendNotification(intent, "Notifica", commListener); //questo intent determina dove ci porta la nostra notifica
 
     }

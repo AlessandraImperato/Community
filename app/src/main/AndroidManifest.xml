@@ -26,6 +26,7 @@
         <activity android:name=".PostActivity" />
         <activity android:name=".SinglePostActivity" />
         <activity android:name=".NewPostActivity"></activity>
+        <service android:name=".PushNotification"/>
     </application>
 
 </manifest>

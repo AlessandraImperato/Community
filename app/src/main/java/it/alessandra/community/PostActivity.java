@@ -53,6 +53,7 @@ public class PostActivity extends AppCompatActivity implements TaskDelegate{
         //ricevo l'intent da groupactivity e per quel gruppo mi prendo tutti i post e in una recycler view metto tutti i post relativi
         //con autore titolo e data
 
+
         Intent i = getIntent();
         nomeGruppo = i.getStringExtra("NOMEGRUPPO");
 
@@ -91,6 +92,9 @@ public class PostActivity extends AppCompatActivity implements TaskDelegate{
         }else{
             restCallLastChangeDate(urlDataChange);
         }
+
+        Intent intent = new Intent(getApplicationContext(), PushNotification.class);
+        startService(intent); //fa partire il service per le notifiche push
     }
 
     public void restCallPost(String url){

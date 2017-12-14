@@ -64,8 +64,6 @@ public class GroupActivity extends AppCompatActivity implements TaskDelegate{
             recyclerView.setAdapter(buttonAdapter);
         }
 
-        Intent intent = new Intent(getApplicationContext(), PushNotification.class);
-        startService(intent); //fa partire il service per le notifiche push
     }
 
     public void restCallGroup(String url){
